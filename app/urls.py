@@ -5,5 +5,5 @@ app_name = 'app'
 
 urlpatterns = [
     path('', views.home),
-    path(r'', include('djoser.urls.jwt')),
+    path('', include('djoser.urls.jwt')),
 ]
