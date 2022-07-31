@@ -1,1 +1,2 @@
-web: gunicorn helpesk.wsgi:application
+release: python3 manage.py migrate
+web: gunicorn helpdesk.wsgi
