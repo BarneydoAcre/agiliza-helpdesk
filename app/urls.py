@@ -4,6 +4,7 @@ from . import views
 app_name = 'app'
 
 urlpatterns = [
-    path('', views.home),
-    path('', include('djoser.urls.jwt')),
+    path('auth/login/', views.login),
+    path('getCompany/', views.getCompany),
+    path('auth/', include('djoser.urls.jwt')),
 ]

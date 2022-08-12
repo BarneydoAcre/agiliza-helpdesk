@@ -28,13 +28,19 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '188.166.65.228'
+    '192.168.15.166',
+    '192.168.100.3',
+    '15.228.158.112',
 ]
 
+# CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:80',
-    'http://127.0.0.1:80',
-    'http://seu ip externo.com.br',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://15.228.158.112:3000',
+    "http://192.168.15.166:3000",
+    "http://192.168.100.3:3000",
 ]
 
 # Application definition
@@ -48,13 +54,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'app',
+    'corsheaders',
     'rest_framework',
-    'djoser'
+    'rest_framework.authtoken',
+    'djoser',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -135,3 +144,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',),
+}
