@@ -14,10 +14,6 @@ class CompanyPositionAdmin(admin.ModelAdmin):
     list_display = ('position',)
 admin.site.register(models.CompanyPosition, CompanyPositionAdmin)
 
-class CompanyWorkerPositionAdmin(admin.ModelAdmin):
-    list_display = ('companyWorker', 'position',)
-admin.site.register(models.CompanyWorkerPosition, CompanyWorkerPositionAdmin)
-
 class PaymentMethodAdmin(admin.ModelAdmin):
     list_display = ('name', 'company', 'person')
 admin.site.register(models.PaymentMethod, PaymentMethodAdmin)

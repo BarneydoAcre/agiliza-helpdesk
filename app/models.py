@@ -24,6 +24,7 @@ class Company(models.Model):
 class CompanyWorker(models.Model):
     person = models.ForeignKey("UserProxy", on_delete=models.PROTECT)
     company = models.ForeignKey("Company", on_delete=models.PROTECT)
+    position = models.ForeignKey("CompanyPosition", on_delete=models.PROTECT)
     cpf = models.IntegerField()
     rg = models.IntegerField()
     phone_number = models.IntegerField()
@@ -51,21 +52,6 @@ class CompanyPosition(models.Model):
     class Meta:
         verbose_name, verbose_name_plural = "Company Position", "Company Positions"
         ordering = ("position",)
-
-class CompanyWorkerPosition(models.Model):
-    company = models.ForeignKey("Company", on_delete=models.PROTECT)
-    companyWorker = models.ForeignKey("CompanyWorker", on_delete=models.PROTECT)
-    position = models.ForeignKey("CompanyPosition", on_delete=models.PROTECT)
-
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return str(self.position)
-
-    class Meta:
-        verbose_name, verbose_name_plural = "Company Worker Position", "Company Worker Positions"
-        ordering = ("companyWorker",)
 
 class PaymentMethod(models.Model):
     person = models.ForeignKey("UserProxy", on_delete=models.PROTECT)
