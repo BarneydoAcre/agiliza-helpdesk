@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     '18.231.178.141',
     '192.168.100.128',
     '18.231.192.69',
+    'ascendproject.ddns.net'
 ]
 
 # CORS_ALLOW_ALL_ORIGINS = True
@@ -45,6 +46,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.15.166:3000",
     "http://192.168.100.128:3000",
     "http://192.168.100.3:3000",
+    "http://ascendproject.ddns.net:3000",
+
 ]
 
 # Application definition
