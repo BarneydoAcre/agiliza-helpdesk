@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from . import models
 from . import forms
 import json
+from datetime import datetime
 import requests as r
 
 @csrf_exempt
@@ -93,7 +94,7 @@ def getCustomerCompanyWorkers(request):
         return HttpResponse("Do not have permission!", status=401, headers={'content-type': 'application/json'})
     
     if verifyLogin(token) == 200:
-        companyworkers = models.CustomerCompanyWorker.objects.filter(id=corporate)
+        companyworkers = models.CustomerCompanyWorker.objects.filter(corporate_id=corporate)
         comp = []
         for cw in companyworkers:
             comp.append({
@@ -129,33 +130,73 @@ def getTicket(request):
         get = request.GET
         token = get['token']
         company = get['company']
+        worker = get['worker']
+        date = get['date'].split(',')
+        status = get['status']
     except MultiValueDictKeyError:
         return HttpResponse("Do not have permission!", status=401, headers={'content-type': 'application/json'})
-    
     if verifyLogin(token) == 200:
-        tickets = models.Ticket.objects.filter(company=company).order_by('id')
+        print(date)
+        if (date == ['null']) and (status == 'null') and (worker == 'null'):
+            tickets = models.Ticket.objects.filter(company=company).order_by('id')
+        if (date != ['null']) and (status == 'null') and (worker =='null'):
+            tickets = models.Ticket.objects.filter(company=company,created__range=(datetime.strptime(date[0], '%Y-%m-%d').date(), datetime.strptime(date[1], '%Y-%m-%d').date())).order_by('id')
+        if (date == ['null']) and (status != 'null') and (worker =='null'):
+            tickets = models.Ticket.objects.filter(company=company,status=status).order_by('id')
+        if (date == ['null']) and (status == 'null') and (worker !='null'):
+            tickets = models.Ticket.objects.filter(company=company,company_worker=worker).order_by('id')
+        if (date != ['null']) and (status != 'null') and (worker =='null'):
+            tickets = models.Ticket.objects.filter(company=company,status=status,created__range=(datetime.strptime(date[0], '%Y-%m-%d').date(), datetime.strptime(date[1], '%Y-%m-%d').date())).order_by('id')
+        if (date == ['null']) and (status != 'null') and (worker !='null'):
+            tickets = models.Ticket.objects.filter(company=company,status=status,company_worker=worker).order_by('id')
+        if (date != ['null']) and (status == 'null') and (worker !='null'):
+            tickets = models.Ticket.objects.filter(company=company,created__range=(datetime.strptime(date[0], '%Y-%m-%d').date(), datetime.strptime(date[1], '%Y-%m-%d').date()),company_worker=worker).order_by('id')
+        if (date != ['null']) and (status != 'null') and (worker !='null'):
+            tickets = models.Ticket.objects.filter(company=company,status=status,created__range=(datetime.strptime(date[0], '%Y-%m-%d').date(), datetime.strptime(date[1], '%Y-%m-%d').date()),company_worker=worker).order_by('id')
         tick = []
         for t in tickets:
             tick.append({
                 'id': t.id,
-                'company': t.company.company,
-                'company_worker_id': t.company_worker.id,
-                'company_worker': t.company_worker.person.username,
                 'title': t.title,
+                'company_name': t.company.company,
+                'company_worker_id': t.company_worker.id,
+                'company_worker_name': t.company_worker.person.username,
                 'corporate_id': t.corporate.id,
-                'corporate': t.corporate.corporate_name,
+                'corporate_name': t.corporate.corporate_name,
                 'customer_id': t.customer.id,
-                'customer': t.customer.customer_name,
+                'customer_name': t.customer.customer_name,
                 'type_id': t.type.id,
-                'type': t.type.request_name,
+                'type_name': t.type.request_name,
                 'routine': t.routine,
                 'duty': t.duty,
                 'description_problem': t.description_problem,
+                'status_id': t.status.id,
+                'status_name': t.status.status,
             })
         return HttpResponse(json.dumps(tick), status=200, headers={'content-type': 'application/json'})
     else:
         return HttpResponse("Invalid Token", status=401, headers={'content-type': 'application/json'})
-        
+
+
+def getCompanyWorkers(request):
+    try:
+        get = request.GET
+        token = get['token']
+        company = get['company']
+    except MultiValueDictKeyError:
+        return HttpResponse("Do not have permission!", status=401, headers={'content-type': 'application/json'})
+
+    if verifyLogin(token) == 200:
+        status = models.CompanyWorker.objects.filter(company=company)
+        stat  = []
+        for s in status:
+            stat.append({
+                'worker_id': s.id,
+                'worker_name': s.person.username,
+            })
+        return HttpResponse(json.dumps(stat), status=200, headers={'content-type': 'application/json'})
+    return HttpResponse("Invalid Token", status=401, headers={'content-type': 'application/json'})
+
 def getTicketComments(request):
     try:
         get = request.GET
@@ -186,7 +227,7 @@ def addTicket(request):
         body = json.loads(request.body)
         form = forms.AddTicketForm(body)
         print(form.is_valid())
-        print(body)
+        print(body  )
         if form.is_valid():
             form.save()
             return HttpResponse(status=200, headers={'content-type': 'application/json'})
@@ -211,11 +252,13 @@ def deleteTicket(request):
     if request.method == "POST":
         body = json.loads(request.body)
         form = forms.DeleteTicketForm(body)
+        if len(models.TicketComment.objects.filter(ticket=body['id'])) != 0:
+            return HttpResponse(status=401, headers={'content-type': 'application/json'})
         if form.is_valid():
             models.Ticket.objects.get(id=body['id'], company=body['company']).delete()
             return HttpResponse(status=200, headers={'content-type': 'application/json'})
-        return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
-    return HttpResponse("Need be a POST", status=401, headers={'content-type': 'application/json'})
+        return HttpResponse(status=402, headers={'content-type': 'application/json'})
+    return HttpResponse(status=403, headers={'content-type': 'application/json'})
 
 @csrf_exempt
 def addCustomerCompany(request):
@@ -235,6 +278,49 @@ def addCustomerCompanyWorker(request):
         form = forms.AddCustomerCompanyWorkerForm(body)
         if form.is_valid():
             form.save()
-        return HttpResponse(status=200, headers={'content-type': 'application/json'})
-        # return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
+            return HttpResponse(status=200, headers={'content-type': 'application/json'})
+        return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
     return HttpResponse("Need be a POST", status=401, headers={'content-type': 'application/json'})
+
+@csrf_exempt
+def closeTicket(request):
+    if request.method == "POST":
+        body = json.loads(request.body)
+        models.Ticket.objects.filter(id=body['id']).update(status=2)
+        return HttpResponse(status=200, headers={'content-type': 'application/json'})
+    return HttpResponse("Need be a POST", status=401, headers={'content-type': 'application/json'})
+
+@csrf_exempt
+def addTicketStatus(request):
+    if request.method == "POST":
+        body = json.loads(request.body)
+        form = forms.AddTicketStatusForm(body)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(status=200, headers={'content-type': 'application/json'})
+        return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
+    return HttpResponse("Need be a POST", status=401, headers={'content-type': 'application/json'})
+
+@csrf_exempt
+def deleteTicketStatus(request):
+    if request.method == "POST":
+        body = json.loads(request.body)
+        form = forms.deleteTicketStatusForm(body)
+        if form.is_valid():
+            models.TicketStatus.objects.filter(id=body['id']).delete()
+            return HttpResponse(status=200, headers={'content-type': 'application/json'})
+        return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
+    return HttpResponse("Need be a POST", status=401, headers={'content-type': 'application/json'})
+
+def getTicketStatus(request):
+    # if verifyLogin(token) == 200:
+    if request.method == "GET":
+        status = models.TicketStatus.objects.all()
+        stat  = []
+        for s in status:
+            stat.append({
+                'status_id': s.id,
+                'status_name': s.status,
+            })
+        return HttpResponse(json.dumps(stat), status=200, headers={'content-type': 'application/json'})
+    return HttpResponse("Invalid Token", status=401, headers={'content-type': 'application/json'})

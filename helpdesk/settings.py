@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [
     '192.168.100.3',
     '18.231.178.141',
     '192.168.100.128',
+    '18.231.192.69',
 ]
 
 # CORS_ALLOW_ALL_ORIGINS = True
@@ -40,6 +41,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'http://18.231.178.141:3000',
+    'http://18.231.192.69:3000',
     "http://192.168.15.166:3000",
     "http://192.168.100.128:3000",
     "http://192.168.100.3:3000",
@@ -55,11 +57,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'app',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+
+    #apps
+    'default',
+    'suport',
+    # 'settings',
 ]
 
 MIDDLEWARE = [
@@ -97,13 +103,23 @@ WSGI_APPLICATION = 'helpdesk.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'helpdesk',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -133,7 +149,7 @@ TIME_ZONE = 'America/Manaus'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

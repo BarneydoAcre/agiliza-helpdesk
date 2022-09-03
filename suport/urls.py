@@ -1,7 +1,8 @@
 from django.urls import path, include
+
 from . import views
 
-app_name = 'app'
+app_name = 'suport'
 
 urlpatterns = [
     path('auth/login/', views.login),
@@ -13,8 +14,13 @@ urlpatterns = [
     path('getRequestTypes/', views.getRequestTypes),
     path('addTicket/', views.addTicket),
     path('getTicket/', views.getTicket),
+    path('addTicketStatus/', views.addTicketStatus),
+    path('deleteTicketStatus/', views.deleteTicketStatus),
+    path('getTicketStatus/', views.getTicketStatus),
+    path('getCompanyWorkers/', views.getCompanyWorkers),
     path('addTicketComment/', views.addTicketComment),
     path('getTicketComments/', views.getTicketComments),
+    path('closeTicket/', views.closeTicket),
     path('deleteTicket/', views.deleteTicket),
     path('auth/', include('djoser.urls.jwt')),
 ]

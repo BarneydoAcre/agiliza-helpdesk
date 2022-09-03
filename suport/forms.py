@@ -29,8 +29,6 @@ class DeleteTicketForm(forms.ModelForm):
             'company',
         ]
         exclude = [
-            'created',
-            'updated',
             'company_worker',
             'title',
             'corporate',
@@ -40,6 +38,8 @@ class DeleteTicketForm(forms.ModelForm):
             'duty',
             'description_problem',
             'status',
+            'created',
+            'updated',
         ]
 
 class AddTicketCommentForm(forms.ModelForm):
@@ -68,13 +68,37 @@ class DeleteTicketCommentForm(forms.ModelForm):
             'updated',
         ],
 
+class AddTicketStatusForm(forms.ModelForm):
+    class Meta:
+        model = models.TicketStatus
+        fields = [
+            'company',
+            'status',
+        ]
+        exclude = [
+            'created',
+            'updated',
+        ]
+
+class deleteTicketStatusForm(forms.ModelForm):
+    class Meta:
+        model = models.TicketStatus
+        fields = [
+            'id',
+            'company',
+        ]
+        exclude = [
+            'status',
+            'created',
+            'updated',
+        ]
+
 class AddCustomerCompanyForm(forms.ModelForm):
     class Meta:
         model = models.CustomerCompany
         fields = [
             'company',
             'company_worker',
-            
             'corporate_name',
             'corporate_cnpj',
             'corporate_ie',
@@ -103,13 +127,3 @@ class AddCustomerCompanyWorkerForm(forms.ModelForm):
             'created',
             'updated',
         ],
-
-class DeleteCustomerCompanyForm(forms.ModelForm):
-    class Meta:
-        model = models.TicketComment
-        fields = [
-            'ticket',
-            'worker_comment',
-            'comment',
-        ]
-        exclude = [],
