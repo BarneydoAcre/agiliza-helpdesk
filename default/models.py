@@ -1,6 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class NewRegister(models.Model):
+    email = models.CharField(max_length=80, blank=False)
+    first_name = models.CharField(max_length=30, blank=False)
+    last_name = models.CharField(max_length=30, blank=False)
+    phone_number = models.CharField(max_length=30, blank=False)
+    
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.first_name
+
+    class Meta:
+        verbose_name, verbose_name_plural = "Novo Registro", "Novos Registros"
+        ordering = ("created",)
+
 class Company(models.Model):
     owner = models.ForeignKey(User, on_delete=models.PROTECT)
     slug = models.CharField(max_length=250, blank=False)
@@ -10,9 +26,13 @@ class Company(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.company
+
     class Meta:
         verbose_name, verbose_name_plural = "Company", "Companys"
         ordering = ("company",)
+
 class CompanyPosition(models.Model):
     company = models.ForeignKey(Company, on_delete=models.PROTECT)
     position = models.CharField(max_length=25, blank=False)

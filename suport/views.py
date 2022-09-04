@@ -8,35 +8,6 @@ import json
 from datetime import datetime
 import requests as r
 
-@csrf_exempt
-def login(request):
-    try:
-        body = json.loads(request.body)
-        email = body['email']
-        password = body['password']
-    except MultiValueDictKeyError:
-        return HttpResponse("Do not have permission!", status=401, headers={'content-type': 'application/json'})
-    
-    User = models.User.objects.get(email=email)
-    req = r.post('http://127.0.0.1:80/auth/jwt/create/', {
-        'username': User.username,
-        'password': password
-    })
-    data = {
-        'login_token': req.json(),
-        'user_id': User.id,
-        'username': User.username,
-        'email': User.email
-    } 
-
-    return HttpResponse(json.dumps(data), status=200, headers={'content-type': 'application/json'})
-
-def verifyLogin(token):
-    req = r.post('http://127.0.0.1:80/auth/jwt/verify/', {
-        'token': token,
-    })
-    return req.status_code
-
 def getCompany(request):
     try:
         email = request.GET['email']

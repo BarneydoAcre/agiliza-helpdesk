@@ -5,7 +5,6 @@ from . import views
 app_name = 'suport'
 
 urlpatterns = [
-    path('auth/login/', views.login),
     path('getCompany/', views.getCompany),
     path('getCustomerCompanys/', views.getCustomerCompanys),
     path('addCustomerCompany/', views.addCustomerCompany),
