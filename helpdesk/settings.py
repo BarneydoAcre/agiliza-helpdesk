@@ -30,9 +30,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '192.168.15.166',
     '192.168.100.3',
-    '18.231.178.141',
     '192.168.100.128',
-    '18.231.192.69',
+    '18.231.147.205',
     'ascendproject.ddns.net'
 ]
 
@@ -41,8 +40,6 @@ ALLOWED_HOSTS = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
-    'http://18.231.178.141:3000',
-    'http://18.231.192.69:3000',
     "http://192.168.15.166:3000",
     "http://192.168.100.128:3000",
     "http://192.168.100.3:3000",
@@ -165,11 +162,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     ),
-# }
-# SIMPLE_JWT = {
-#    'AUTH_HEADER_TYPES': ('JWT',),
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',),
+}
