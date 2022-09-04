@@ -3,6 +3,10 @@ from django.contrib import admin
 from . import models
 
 
+class NewRegisterAdmin(admin.ModelAdmin):
+    list_display = ('id', 'email', 'first_name', 'last_name', 'phone_number',)
+admin.site.register(models.NewRegister, NewRegisterAdmin)
+
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('company', 'owner')
 admin.site.register(models.Company, CompanyAdmin)
