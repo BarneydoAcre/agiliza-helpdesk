@@ -23,7 +23,7 @@ class PaymentMethod(models.Model):
  
 class RequestType(models.Model):
     company = models.ForeignKey(Company, on_delete=models.PROTECT)
-    request_name = models.CharField(max_length=20, blank=False)
+    request_name = models.CharField(max_length=25, blank=False)
         
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

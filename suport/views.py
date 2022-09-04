@@ -105,7 +105,18 @@ def getCustomerCompanyWorkers(request):
     else:
         return HttpResponse("Invalid Token", status=401, headers={'content-type': 'application/json'})
 
-def getRequestTypes(request):
+@csrf_exempt
+def addRequestType(request):
+    if request.method == "POST":
+        body = json.loads(request.body)
+        form = forms.AddRequestTypeForm(body)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(status=200, headers={'content-type': 'application/json'})
+        return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
+    return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
+
+def getRequestType(request):
     try:
         get = request.GET
         token = get['token']
@@ -113,6 +124,29 @@ def getRequestTypes(request):
     except MultiValueDictKeyError:
         return HttpResponse("Do not have permission!", status=401, headers={'content-type': 'application/json'})
     
+    if verifyLogin(token) == 200:
+        companyworkers = models.RequestType.objects.filter(company=company)
+        comp = []
+        for cw in companyworkers:
+            comp.append({
+                'type_id': cw.id,
+                'type_name': cw.request_name,
+            })
+        return HttpResponse(json.dumps(comp), status=200, headers={'content-type': 'application/json'})
+    else:
+        return HttpResponse("Invalid Token", status=401, headers={'content-type': 'application/json'})
+
+@csrf_exempt
+def deleteRequestType(request):
+    body = json.loads(request.body)
+    # token = get['token']
+    company = body['company']
+    id = body['id']
+    if request.method == "POST":
+        models.RequestType.objects.filter(company=company, id=id).delete()
+        return HttpResponse(status=200, headers={'content-type': 'application/json'})
+    return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
+
     if verifyLogin(token) == 200:
         companyworkers = models.RequestType.objects.filter(company=company)
         comp = []

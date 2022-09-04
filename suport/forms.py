@@ -127,3 +127,15 @@ class AddCustomerCompanyWorkerForm(forms.ModelForm):
             'created',
             'updated',
         ],
+
+class AddRequestTypeForm(forms.ModelForm):
+    class Meta:
+        model = models.RequestType
+        fields = [
+            'company',
+            'request_name',
+        ]
+        exclude = [
+            'created',
+            'updated',
+        ]
