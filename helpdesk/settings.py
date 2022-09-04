@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [
     '192.168.100.3',
     '192.168.100.128',
     '18.231.147.205',
+    '189.11.222.233',
     'ascendproject.ddns.net'
 ]
 
@@ -43,6 +44,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.15.166:3000",
     "http://192.168.100.128:3000",
     "http://192.168.100.3:3000",
+    "http://ascendproject-helpdesk.herokuapp.com",
     "https://ascendproject-helpdesk.herokuapp.com",
 
 ]

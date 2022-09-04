@@ -7,7 +7,7 @@
 $ pip install django
 $ pip install django-cors-headers
 $ pip install djoser
-$ pip install djangorestframework_simplejwt
+$ pip install psycopg2-binary (if linux)
 
 # serve with hot reload at localhost:8000
 $ py manage.py runserver
