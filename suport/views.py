@@ -18,7 +18,7 @@ def login(request):
         return HttpResponse("Do not have permission!", status=401, headers={'content-type': 'application/json'})
     
     User = models.User.objects.get(email=email)
-    req = r.post('http://127.0.0.1:8000/auth/jwt/create/', {
+    req = r.post('http://127.0.0.1:80/auth/jwt/create/', {
         'username': User.username,
         'password': password
     })
@@ -32,7 +32,7 @@ def login(request):
     return HttpResponse(json.dumps(data), status=200, headers={'content-type': 'application/json'})
 
 def verifyLogin(token):
-    req = r.post('http://127.0.0.1:8000/auth/jwt/verify/', {
+    req = r.post('http://127.0.0.1:80/auth/jwt/verify/', {
         'token': token,
     })
     return req.status_code
