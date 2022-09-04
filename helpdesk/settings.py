@@ -31,9 +31,10 @@ ALLOWED_HOSTS = [
     '192.168.15.166',
     '192.168.100.3',
     '192.168.100.128',
-    '18.231.147.205',
     '189.11.222.233',
-    'ascendproject.ddns.net'
+    '18.231.147.205',
+    'ascendproject.ddns.net',
+    'ec2-18-231-147-205.sa-east-1.compute.amazonaws.com'
 ]
 
 # CORS_ALLOW_ALL_ORIGINS = True
