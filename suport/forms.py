@@ -80,6 +80,15 @@ class AddTicketStatusForm(forms.ModelForm):
             'updated',
         ]
 
+class updateTicketStatusForm(forms.ModelForm):
+    class Meta:
+        model = models.Ticket
+        fields = [
+            'id',
+            'company',
+            'status',
+        ]
+
 class deleteTicketStatusForm(forms.ModelForm):
     class Meta:
         model = models.TicketStatus
