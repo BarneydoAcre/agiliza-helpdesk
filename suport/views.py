@@ -324,7 +324,7 @@ def updateTicketStatus(request):
         body = json.loads(request.body)
         form = forms.updateTicketStatusForm(body)
         if form.is_valid():
-            models.TicketStatus.objects.filter(id=body['id'],company=body['company'],status=body['id']).update()
+            models.Ticket.objects.filter(id=body['ticket'],company=body['company']).update(status=body['status_id'])
             return HttpResponse(status=200, headers={'content-type': 'application/json'})
         return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
     return HttpResponse("Need be a POST", status=401, headers={'content-type': 'application/json'})

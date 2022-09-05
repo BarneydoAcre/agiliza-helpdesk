@@ -23,5 +23,6 @@ urlpatterns = [
     path('getTicketComments/', views.getTicketComments),
     path('closeTicket/', views.closeTicket),
     path('deleteTicket/', views.deleteTicket),
+    path('updateTicketStatus/', views.updateTicketStatus),
     path('auth/', include('djoser.urls.jwt')),
 ]
