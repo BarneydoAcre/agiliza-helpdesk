@@ -8,12 +8,12 @@ class NewRegisterAdmin(admin.ModelAdmin):
 admin.site.register(models.NewRegister, NewRegisterAdmin)
 
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('company', 'owner')
+    list_display = ('company', 'owner',)
 admin.site.register(models.Company, CompanyAdmin)
 
 class CompanyWorkerAdmin(admin.ModelAdmin):
-    list_display = ('person', 'company', 'cpf', 'position')
-admin.site.register(models.CompanyWorker)
+    list_display = ('person', 'company', 'cpf', 'position',)
+admin.site.register(models.CompanyWorker, CompanyWorkerAdmin)
 
 class CompanyPositionAdmin(admin.ModelAdmin):
     list_display = ('position',)

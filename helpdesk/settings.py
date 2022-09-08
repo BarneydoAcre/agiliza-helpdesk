@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     #apps
     'default',
     'suport',
+    'foodservice',
     # 'settings',
 ]
 

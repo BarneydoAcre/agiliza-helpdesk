@@ -69,7 +69,7 @@ class CustomerCompanyWorker(models.Model):
     updated = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return str(self.customer_name)
+        return self.customer_name
 
     class Meta:
         verbose_name, verbose_name_plural = "Customer Company Worker", "Customers Companys Workers"

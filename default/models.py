@@ -39,6 +39,9 @@ class CompanyPosition(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.position
     
     class Meta:
         verbose_name, verbose_name_plural = "Company Position", "Company Positions"
@@ -54,6 +57,9 @@ class CompanyWorker(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.person.username
     
     class Meta:
         verbose_name, verbose_name_plural = "Company Worker", "Company Workers"
