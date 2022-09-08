@@ -5,6 +5,7 @@ import default.models
 
 class ProductMeasure(models.Model):
     company = models.ForeignKey(default.models.Company, on_delete=models.PROTECT)
+    company_worker = models.ForeignKey(default.models.CompanyWorker, on_delete=models.PROTECT)
     measure = models.CharField(max_length=2, blank=False)
 
     created = models.DateTimeField(auto_now_add=True)
@@ -18,6 +19,7 @@ class ProductMeasure(models.Model):
        
 class ProductBrand(models.Model):
     company = models.ForeignKey(default.models.Company, on_delete=models.PROTECT)
+    company_worker = models.ForeignKey(default.models.CompanyWorker, on_delete=models.PROTECT)
     brand = models.CharField(max_length=20, blank=False)
 
     created = models.DateTimeField(auto_now_add=True)

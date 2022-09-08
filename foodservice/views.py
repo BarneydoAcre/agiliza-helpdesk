@@ -27,7 +27,7 @@ def getProduct(request):
             return HttpResponse("Invalid data!", status=401, headers={'content-type': 'application/json'})
         if verifyLogin(get['token']) == 200:
             data = []
-            for m in models.Product.objects.all():
+            for m in models.Product.objects.filter(company=get['company'][0]):
                 data.append({
                     'name': str(m.name),
                     'brand': str(m.brand),
@@ -38,6 +38,17 @@ def getProduct(request):
             return HttpResponse(json.dumps(data), status=200, headers={'content-type': 'application/json'})
         return HttpResponse(status=401, headers={'content-type': 'application/json'})
 
+@csrf_exempt
+def addBrand(request):
+    if request.method == "POST":
+        body = json.loads(request.body)
+        form = forms.AddBrandForm(body)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(status=200, headers={'content-type': 'application/json'})
+        return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
+    return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
+
 def getBrand(request):
     if request.method == "GET":
         try:
@@ -47,13 +58,24 @@ def getBrand(request):
             return HttpResponse("Invalid data!", status=401, headers={'content-type': 'application/json'})
         if verifyLogin(get['token']) == 200:
             data = []
-            for m in models.ProductBrand.objects.all():
+            for m in models.ProductBrand.objects.filter(company=get['company'][0]):
                 data.append({
                     'brand_id': m.id,
                     'brand_name': m.brand,
                 })
             return HttpResponse(json.dumps(data), status=200, headers={'content-type': 'application/json'})
         return HttpResponse(status=401, headers={'content-type': 'application/json'})
+
+@csrf_exempt
+def addMeasure(request):
+    if request.method == "POST":
+        body = json.loads(request.body)
+        form = forms.AddMeasureForm(body)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(status=200, headers={'content-type': 'application/json'})
+        return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
+    return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
 
 def getMeasure(request):
     if request.method == "GET":
@@ -64,7 +86,7 @@ def getMeasure(request):
             return HttpResponse("Invalid data!", status=401, headers={'content-type': 'application/json'})
         if verifyLogin(get['token']) == 200:
             data = []
-            for m in models.ProductMeasure.objects.all():
+            for m in models.ProductMeasure.objects.filter(company=get['company'][0]):
                 data.append({
                     'measure_id': m.id,
                     'measure_name': m.measure,
