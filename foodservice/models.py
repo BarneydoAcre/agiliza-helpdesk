@@ -51,3 +51,33 @@ class Product(models.Model):
         verbose_name, verbose_name_plural = "Produto", "Produtos"
         ordering = ("name",)
 
+class ProductSale(models.Model):
+    company = models.ForeignKey(default.models.Company, on_delete=models.PROTECT)
+    company_worker = models.ForeignKey(default.models.CompanyWorker, on_delete=models.PROTECT)
+    name = models.CharField(max_length=50, blank=False)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name, verbose_name_plural = "Produto para Venda", "Produtos para Venda"
+        ordering = ("name",)
+
+class ProductSaleItems(models.Model):
+    company = models.ForeignKey(default.models.Company, on_delete=models.PROTECT)
+    company_worker = models.ForeignKey(default.models.CompanyWorker, on_delete=models.PROTECT)
+    product_sale = models.ForeignKey(ProductSale, on_delete=models.PROTECT)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.product
+
+    class Meta:
+        verbose_name, verbose_name_plural = "Produto Montado", "Produtos para Montados"
+        ordering = ("product_sale",)

@@ -32,3 +32,22 @@ class AddMeasureForm(forms.ModelForm):
             "company_worker",
             "measure",
         ]
+
+class AddProductSaleForm(forms.ModelForm):
+    class Meta: 
+        model = models.ProductSale
+        fields = [
+            "company",
+            "company_worker",
+            "name",
+        ]
+
+class AddProductSaleItemsForm(forms.ModelForm):
+    class Meta: 
+        model = models.ProductSaleItems
+        fields = [
+            "company",
+            "company_worker",
+            "product_sale",
+            "product",
+        ]
