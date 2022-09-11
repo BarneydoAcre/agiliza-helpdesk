@@ -8,11 +8,27 @@ class AddProductForm(forms.ModelForm):
         fields = [
             "company",
             "company_worker",
+            "type",
             "name",
             "brand",
             "measure",
             "stock",
             "cost",
+        ]
+
+class AddProductSaleForm(forms.ModelForm):
+    class Meta: 
+        model = models.Product
+        fields = [
+            "company",
+            "company_worker",
+            "type",
+            "name",
+            "brand",
+            "measure",
+            "stock",
+            "cost",
+            "price",
         ]
 
 class AddBrandForm(forms.ModelForm):
@@ -33,21 +49,11 @@ class AddMeasureForm(forms.ModelForm):
             "measure",
         ]
 
-class AddProductSaleForm(forms.ModelForm):
+class AddProductItemsForm(forms.ModelForm):
     class Meta: 
-        model = models.ProductSale
+        model = models.ProductItems
         fields = [
             "company",
             "company_worker",
-            "name",
-        ]
-
-class AddProductSaleItemsForm(forms.ModelForm):
-    class Meta: 
-        model = models.ProductSaleItems
-        fields = [
-            "company",
-            "company_worker",
-            "product_sale",
             "product",
         ]

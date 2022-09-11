@@ -7,9 +7,7 @@ app_name = 'foodservice'
 urlpatterns = [
     path('addProduct/', views.addProduct),
     path('getProduct/', views.getProduct),
-    path('addProductSale/', views.addProductSale),
-    path('getProductSale/', views.getProductSale),
-    path('addProductSaleItems/', views.addProductSaleItems),
+    path('addProductItems/', views.addProductItems),
     path('addBrand/', views.addBrand),
     path('getBrand/', views.getBrand),
     path('addMeasure/', views.addMeasure),
