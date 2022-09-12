@@ -52,4 +52,6 @@ class AddProductItemsForm(forms.ModelForm):
             "company",
             "company_worker",
             "product",
+            "product_item",
+            "quantity",
         ]

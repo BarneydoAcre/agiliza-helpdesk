@@ -36,6 +36,9 @@ def getProduct(request):
             model = models.Product.objects.filter(company=get['company'][0], type=get['type'][0])
             data = []
             for m in model:
+                if get['type'][0] == '2':
+                    cost_model = models.ProductItems.objects.filter(company=get['company'][0], product=m.id)
+                    print(cost_model)
                 data.append({
                     'id': str(m.id),
                     'name': str(m.name),

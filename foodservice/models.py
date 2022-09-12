@@ -61,6 +61,8 @@ class ProductItems(models.Model):
     company = models.ForeignKey(default.models.Company, on_delete=models.PROTECT)
     company_worker = models.ForeignKey(default.models.CompanyWorker, on_delete=models.PROTECT)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product_item = models.ForeignKey(Product, on_delete=models.PROTECT, related_name="product_items")
+    quantity = models.FloatField(blank=False)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
