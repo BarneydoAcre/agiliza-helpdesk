@@ -13,7 +13,6 @@ def addProduct(request):
         body = json.loads(request.body)
         if body["type"] == 1:
             form = forms.AddProductForm(body)
-            print(form.is_valid(), body)
             if form.is_valid():
                 form.save()
                 return HttpResponse(status=200, headers={'content-type': 'application/json'})
@@ -33,7 +32,7 @@ def getProduct(request):
         except MultiValueDictKeyError:
             get = []
             return HttpResponse("Invalid data!", status=401, headers={'content-type': 'application/json'})
-        if verifyLogin(get['token']) == 200:
+        if verifyLogin(get['token'][0]) == 200:
             model = models.Product.objects.filter(company=get['company'][0], type=get['type'][0])
             data = []
             for m in model:
@@ -44,6 +43,7 @@ def getProduct(request):
                     'measure': str(m.measure),
                     'stock': str(m.stock),
                     'cost': str(m.cost),
+                    'price': str(m.price),
                 })
             return HttpResponse(json.dumps(data), status=200, headers={'content-type': 'application/json'})
         return HttpResponse("Access Unautorized", status=402, headers={'content-type': 'application/json'})

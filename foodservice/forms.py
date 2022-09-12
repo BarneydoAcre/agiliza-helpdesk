@@ -24,10 +24,6 @@ class AddProductSaleForm(forms.ModelForm):
             "company_worker",
             "type",
             "name",
-            "brand",
-            "measure",
-            "stock",
-            "cost",
             "price",
         ]
 
