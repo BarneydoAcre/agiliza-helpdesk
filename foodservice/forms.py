@@ -55,3 +55,27 @@ class AddProductItemsForm(forms.ModelForm):
             "product_item",
             "quantity",
         ]
+
+class AddSaleForm(forms.ModelForm):
+    class Meta: 
+        model = models.Sale
+        fields = [
+            "company",
+            "company_worker",
+            "value",
+            "delivery",
+            "delivery_cost",
+            "total",
+        ]
+
+class AddSaleItemsForm(forms.ModelForm):
+    class Meta: 
+        model = models.SaleItems
+        fields = [
+            "company",
+            "company_worker",
+            "sale",
+            "product",
+            "quantity",
+            "price",
+        ]

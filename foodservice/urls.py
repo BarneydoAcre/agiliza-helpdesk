@@ -12,4 +12,8 @@ urlpatterns = [
     path('getBrand/', views.getBrand),
     path('addMeasure/', views.addMeasure),
     path('getMeasure/', views.getMeasure),
+    path('addSale/', views.addSale),
+    path('addSaleItems/', views.addSaleItems),
+    path('test/', views.getProductCost),
+
 ]

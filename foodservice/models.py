@@ -68,7 +68,7 @@ class ProductItems(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.product
+        return self.product_item.name
 
     class Meta:
         verbose_name, verbose_name_plural = "Produto Item", "Produto Items"
@@ -77,12 +77,16 @@ class ProductItems(models.Model):
 class Sale(models.Model):
     company = models.ForeignKey(default.models.Company, on_delete=models.PROTECT)
     company_worker = models.ForeignKey(default.models.CompanyWorker, on_delete=models.PROTECT)
+    value = models.FloatField(blank=False)
+    delivery = models.BooleanField(default=False)
+    delivery_cost = models.FloatField(blank=False, default=0)
+    total = models.FloatField(blank=False, default=0)
     
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
     class Meta:
         verbose_name, verbose_name_plural = "Venda", "Vendas"
@@ -91,13 +95,16 @@ class Sale(models.Model):
 class SaleItems(models.Model):
     company = models.ForeignKey(default.models.Company, on_delete=models.PROTECT)
     company_worker = models.ForeignKey(default.models.CompanyWorker, on_delete=models.PROTECT)
+    sale = models.ForeignKey(Sale, on_delete=models.PROTECT)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    quantity = models.FloatField(blank=False, default=0)
+    price = models.FloatField(blank=False, default=0)
     
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
     class Meta:
         verbose_name, verbose_name_plural = "Venda Items", "Vendas Items"

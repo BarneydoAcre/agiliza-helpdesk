@@ -12,3 +12,11 @@ admin.site.register(models.ProductMeasure, ProductMeasureAdmin)
 class ProductBrandAdmin(admin.ModelAdmin):
     list_display = ("company", "brand",)
 admin.site.register(models.ProductBrand, ProductBrandAdmin)
+
+class SaleAdmin(admin.ModelAdmin):
+    list_display = ("company", "value", "delivery", "delivery_cost")
+admin.site.register(models.Sale, SaleAdmin)
+
+class SaleItemsAdmin(admin.ModelAdmin):
+    list_display = ("company", "product", "price", "quantity")
+admin.site.register(models.SaleItems, SaleItemsAdmin)

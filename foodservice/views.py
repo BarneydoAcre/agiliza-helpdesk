@@ -37,19 +37,39 @@ def getProduct(request):
             data = []
             for m in model:
                 if get['type'][0] == '2':
-                    cost_model = models.ProductItems.objects.filter(company=get['company'][0], product=m.id)
-                    print(cost_model)
+                    cost = getProductCost(m.id, get['company'][0])
+                else: 
+                    cost = m.cost
                 data.append({
                     'id': str(m.id),
                     'name': str(m.name),
                     'brand': str(m.brand),
                     'measure': str(m.measure),
                     'stock': str(m.stock),
-                    'cost': str(m.cost),
+                    'cost': str(round(cost,2)),
                     'price': str(m.price),
                 })
             return HttpResponse(json.dumps(data), status=200, headers={'content-type': 'application/json'})
         return HttpResponse("Access Unautorized", status=402, headers={'content-type': 'application/json'})
+
+def getProductCost(id, company):
+    model = models.ProductItems.objects.filter(company=company, product=id)
+    data = []
+    cost = 0
+    quantity = 0
+
+    for m in model:
+        cost += m.product_item.cost*m.quantity
+        quantity += m.quantity
+
+        data.append({
+            'id': str(m.id),
+            'cost': str(m.product_item.cost),
+        })
+    if quantity == 0:
+        return 0
+    else:    
+        return cost/quantity
 
 @csrf_exempt
 def addProductItems(request):
@@ -59,13 +79,14 @@ def addProductItems(request):
             form = forms.AddProductItemsForm({
                 "company": body["company"],
                 "company_worker": body["company_worker"],
-                "product_sale": body["product_sale"],
-                "product": i["id"]
+                "product": body["product_sale"],
+                "product_item": i["id"],
+                "quantity": i["quantity"],
             })
             if form.is_valid():
                 form.save()
-                return HttpResponse(status=200, headers={'content-type': 'application/json'})
-        return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
+        return HttpResponse(status=200, headers={'content-type': 'application/json'})
+        # return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
     return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
 
 @csrf_exempt
@@ -123,4 +144,36 @@ def getMeasure(request):
                 })
             return HttpResponse(json.dumps(data), status=200, headers={'content-type': 'application/json'})
         return HttpResponse(status=401, headers={'content-type': 'application/json'})
+
+@csrf_exempt
+def addSale(request):
+    if request.method == "POST":
+        body = json.loads(request.body)
+        form = forms.AddSaleForm(body)
+        if form.is_valid():
+            last_id = form.save()
+            return HttpResponse(last_id.id, status=200, headers={'content-type': 'application/json'})
+        return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
+    return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
+
+@csrf_exempt
+def addSaleItems(request):
+    if request.method == "POST":
+        body = json.loads(request.body)
+        for i in body["products"]:
+            data = {
+                "company": body["company"],
+                "company_worker": body["company_worker"],
+                "sale": body["sale"],
+                "product": i["id"],
+                "quantity": i["quantity"],
+                "price": i["price"],
+            }
+            form = forms.AddSaleItemsForm(data)
+            if form.is_valid():
+                form.save()
+            else:
+                return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
+        return HttpResponse(status=200, headers={'content-type': 'application/json'})
+    return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
 
