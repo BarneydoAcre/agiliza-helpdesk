@@ -161,6 +161,9 @@ def addSaleItems(request):
     if request.method == "POST":
         body = json.loads(request.body)
         for i in body["products"]:
+            model = models.ProductItems.objects.filter(company=body["company"],product=i["id"])
+            for m in model:
+                models.Product.objects.filter(company=body["company"],id=m.product_item.id).update(stock=round(m.product_item.stock-float(i["quantity"]),2))
             data = {
                 "company": body["company"],
                 "company_worker": body["company_worker"],
@@ -177,3 +180,18 @@ def addSaleItems(request):
         return HttpResponse(status=200, headers={'content-type': 'application/json'})
     return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
 
+@csrf_exempt
+def addProductStock(request):
+    if request.method == "POST":
+        body = json.loads(request.body)
+        model = models.Product.objects.filter(company=body["company"],id=body["product"])
+        for m in model:
+            mod = m.cost*m.stock
+            front = float(body["quantity"])*float(body["cost"])
+            base = m.stock+float(body["quantity"])
+            if m.stock == 0:
+                model.update(stock=body["quantity"],cost=body["cost"])
+            else:
+                model.update(stock=round(m.stock+float(body["quantity"]),2),cost=(mod+front)/base) 
+        return HttpResponse(status=200, headers={'content-type': 'application/json'})
+    return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})

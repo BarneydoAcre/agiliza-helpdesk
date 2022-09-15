@@ -14,6 +14,7 @@ urlpatterns = [
     path('getMeasure/', views.getMeasure),
     path('addSale/', views.addSale),
     path('addSaleItems/', views.addSaleItems),
+    path('addProductStock/', views.addProductStock),
     path('test/', views.getProductCost),
 
 ]
