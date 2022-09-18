@@ -208,43 +208,44 @@ def printPDF(request, id):
     buffer = io.BytesIO()
     cnv = canvas.Canvas(buffer, pagesize=(mm2p(72),mm2p(130)))
     line = 125
-    col = 3
+    col = 1
     total = 0
+    l = "_______________________________________"
 
-    cnv.setFont("Helvetica", 11)
-    cnv.drawString(mm2p(col+17),mm2p(line),"DELICIAS DA LIA")
+    cnv.setFont("Helvetica", 8)
+    cnv.drawString(mm2p(col+25),mm2p(line),"DELICIAS DA LIA")
     line += -6
     for i in sale:
         delivery = i.delivery
-        cnv.drawString(mm2p(col-1),mm2p(line),"Venda Nº: "+str(i.id))
-        cnv.drawString(mm2p(col+42),mm2p(line),str(i.created).split(' ')[0])
+        cnv.drawString(mm2p(col),mm2p(line),"Venda Nº: "+str(i.id))
+        cnv.drawString(mm2p(col+44),mm2p(line),str(i.created).split(' ')[0])
         line += -2
-    cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
+    cnv.drawString(mm2p(col-1),mm2p(line),l)
     line += -6
-    cnv.drawString(mm2p(col-1),mm2p(line),"|produto|                    |preço|    |total|")
+    cnv.drawString(mm2p(col-1),mm2p(line),"|produto|                                           |preço| |total|")
     line += -6
     for i in sale_items:
         total = total + i.price*i.quantity
         cnv.drawString(mm2p(col),mm2p(line),str(int(i.quantity))+'x '+i.product.name)
-        cnv.drawString(mm2p(col+36),mm2p(line),str(i.price))
-        cnv.drawString(mm2p(col+52),mm2p(line),str(i.price*i.quantity))
+        cnv.drawString(mm2p(col+44),mm2p(line),str(i.price))
+        cnv.drawString(mm2p(col+53),mm2p(line),str(i.price*i.quantity))
         line += -4
-    cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
+    cnv.drawString(mm2p(col-1),mm2p(line),l)
     line += -5
-    cnv.drawString(mm2p(col-1),mm2p(line),"Frete_____________________"+str(round(delivery,3)))
+    cnv.drawString(mm2p(col-1),mm2p(line),"Frete_______________________________"+str(round(delivery,3)))
     line += -1
-    cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
+    cnv.drawString(mm2p(col-1),mm2p(line),l)
     line += -10
-    cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
+    cnv.drawString(mm2p(col-1),mm2p(line),l)
     line += -5
-    cnv.drawString(mm2p(col-1),mm2p(line),"Total_____________________"+str(round(total+delivery,3)))
+    cnv.drawString(mm2p(col-1),mm2p(line),"Total_______________________________"+str(round(total+delivery,3)))
     line += -1
-    cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
+    cnv.drawString(mm2p(col-1),mm2p(line),l)
     line += -10
     cnv.drawString(mm2p(col+3),mm2p(7),"Chave PIX: CPF - 002.715.540-45")
     cnv.setFont("Helvetica", 6)
     cnv.drawString(mm2p(col+25),mm2p(3),"Versão 0.00.001")
-    cnv.drawString(mm2p(col+25),mm2p(1),"_______________________________")
+    cnv.drawString(mm2p(col+25),mm2p(1),l)
 
     cnv.showPage()
     cnv.save()
