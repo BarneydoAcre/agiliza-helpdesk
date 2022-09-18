@@ -217,30 +217,31 @@ def printPDF(request, id):
     for i in sale:
         delivery = i.delivery
         cnv.drawString(mm2p(col-1),mm2p(line),"Venda Nº: "+str(i.id))
-        cnv.drawString(mm2p(col+47),mm2p(line),str(i.created).split(' ')[0])
+        cnv.drawString(mm2p(col+42),mm2p(line),str(i.created).split(' ')[0])
         line += -2
     cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
     line += -6
     for i in sale_items:
         total = total + i.price
         cnv.drawString(mm2p(col),mm2p(line),i.product.name)
-        cnv.drawString(mm2p(col+58),mm2p(line),str(i.price))
+        cnv.drawString(mm2p(col+52),mm2p(line),str(i.price))
         line += -4
     cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
     line += -5
-    cnv.drawString(mm2p(col-1),mm2p(line),"Frete_______________________"+str(round(delivery,3)))
+    cnv.drawString(mm2p(col-1),mm2p(line),"Frete_____________________"+str(round(delivery,3)))
     line += -1
     cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
     line += -10
     cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
     line += -5
-    cnv.drawString(mm2p(col-1),mm2p(line),"Total_______________________"+str(round(total+delivery,3)))
+    cnv.drawString(mm2p(col-1),mm2p(line),"Total_____________________"+str(round(total+delivery,3)))
     line += -1
     cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
     line += -10
-    cnv.drawString(mm2p(col+3),mm2p(5),"Chave PIX: CPF - 002.715.540-45")
+    cnv.drawString(mm2p(col+3),mm2p(7),"Chave PIX: CPF - 002.715.540-45")
     cnv.setFont("Helvetica", 6)
-    cnv.drawString(mm2p(col+25),mm2p(2),"Versão 0.00.001")
+    cnv.drawString(mm2p(col+25),mm2p(3),"Versão 0.00.001")
+    cnv.drawString(mm2p(col+25),mm2p(1),"_______________________________")
 
     cnv.showPage()
     cnv.save()
