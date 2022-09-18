@@ -221,10 +221,13 @@ def printPDF(request, id):
         line += -2
     cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
     line += -6
+    cnv.drawString(mm2p(col-1),mm2p(line),"|produto|                    |preço|    |total|")
+    line += -6
     for i in sale_items:
-        total = total + i.price
-        cnv.drawString(mm2p(col),mm2p(line),i.product.name)
-        cnv.drawString(mm2p(col+52),mm2p(line),str(i.price))
+        total = total + i.price*i.quantity
+        cnv.drawString(mm2p(col),mm2p(line),str(int(i.quantity))+'x '+i.product.name)
+        cnv.drawString(mm2p(col+36),mm2p(line),str(i.price))
+        cnv.drawString(mm2p(col+52),mm2p(line),str(i.price*i.quantity))
         line += -4
     cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
     line += -5
