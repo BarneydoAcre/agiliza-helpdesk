@@ -78,8 +78,7 @@ class Sale(models.Model):
     company = models.ForeignKey(default.models.Company, on_delete=models.PROTECT)
     company_worker = models.ForeignKey(default.models.CompanyWorker, on_delete=models.PROTECT)
     value = models.FloatField(blank=False)
-    delivery = models.BooleanField(default=False)
-    delivery_cost = models.FloatField(blank=False, default=0)
+    delivery = models.FloatField(blank=False, default=0)
     total = models.FloatField(blank=False, default=0)
     
     created = models.DateTimeField(auto_now_add=True)

@@ -64,7 +64,6 @@ class AddSaleForm(forms.ModelForm):
             "company_worker",
             "value",
             "delivery",
-            "delivery_cost",
             "total",
         ]
 

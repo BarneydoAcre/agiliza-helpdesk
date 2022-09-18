@@ -1,8 +1,13 @@
 from django.shortcuts import render, HttpResponse
+from django.http import FileResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.datastructures import MultiValueDictKeyError
+from helpdesk.settings import BASE_DIR
 
 from default.views import verifyLogin
+from reportlab.pdfgen import canvas
+import uuid
+ 
 from . import forms
 from . import models
 import json
@@ -36,17 +41,13 @@ def getProduct(request):
             model = models.Product.objects.filter(company=get['company'][0], type=get['type'][0])
             data = []
             for m in model:
-                if get['type'][0] == '2':
-                    cost = getProductCost(m.id, get['company'][0])
-                else: 
-                    cost = m.cost
                 data.append({
                     'id': str(m.id),
                     'name': str(m.name),
                     'brand': str(m.brand),
                     'measure': str(m.measure),
                     'stock': str(m.stock),
-                    'cost': str(round(cost,2)),
+                    'cost': str(round(m.cost,2)),
                     'price': str(m.price),
                 })
             return HttpResponse(json.dumps(data), status=200, headers={'content-type': 'application/json'})
@@ -75,6 +76,7 @@ def getProductCost(id, company):
 def addProductItems(request):
     if request.method == "POST":
         body = json.loads(request.body)
+        cost = 0
         for i in body["items"]:
             form = forms.AddProductItemsForm({
                 "company": body["company"],
@@ -85,6 +87,8 @@ def addProductItems(request):
             })
             if form.is_valid():
                 form.save()
+            cost += getProductCost(body["product_sale"], body["company"])
+        models.Product.objects.filter(company=body["company"], id=body["product_sale"]).update(cost=cost)
         return HttpResponse(status=200, headers={'content-type': 'application/json'})
         # return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
     return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
@@ -195,3 +199,57 @@ def addProductStock(request):
                 model.update(stock=round(m.stock+float(body["quantity"]),2),cost=(mod+front)/base) 
         return HttpResponse(status=200, headers={'content-type': 'application/json'})
     return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
+
+@csrf_exempt
+def printPDF(request, id):
+    import io
+    sale = models.Sale.objects.filter(id=id)
+    sale_items = models.SaleItems.objects.filter(sale=id)
+    buffer = io.BytesIO()
+    cnv = canvas.Canvas(buffer, pagesize=(mm2p(72),mm2p(130)))
+    line = 125
+    col = 3
+    total = 0
+
+    cnv.setFont("Helvetica", 11)
+    cnv.drawString(mm2p(col+17),mm2p(line),"DELICIAS DA LIA")
+    line += -6
+    for i in sale:
+        delivery = i.delivery
+        cnv.drawString(mm2p(col-1),mm2p(line),"Venda Nº: "+str(i.id))
+        cnv.drawString(mm2p(col+47),mm2p(line),str(i.created).split(' ')[0])
+        line += -2
+    cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
+    line += -6
+    for i in sale_items:
+        total = total + i.price
+        cnv.drawString(mm2p(col),mm2p(line),i.product.name)
+        cnv.drawString(mm2p(col+58),mm2p(line),str(i.price))
+        line += -4
+    cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
+    line += -5
+    cnv.drawString(mm2p(col-1),mm2p(line),"Frete_______________________"+str(round(delivery,3)))
+    line += -1
+    cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
+    line += -10
+    cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
+    line += -5
+    cnv.drawString(mm2p(col-1),mm2p(line),"Total_______________________"+str(round(total+delivery,3)))
+    line += -1
+    cnv.drawString(mm2p(col-1),mm2p(line),"_______________________________")
+    line += -10
+    cnv.drawString(mm2p(col+3),mm2p(5),"Chave PIX: CPF - 002.715.540-45")
+    cnv.setFont("Helvetica", 6)
+    cnv.drawString(mm2p(col+25),mm2p(2),"Versão 0.00.001")
+
+    cnv.showPage()
+    cnv.save()
+
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename=str(sale[0].id)+".pdf")
+
+def mm2p(milimetros):
+    return milimetros / 0.352777
+
+def createPdf():
+    return id

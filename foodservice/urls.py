@@ -15,6 +15,6 @@ urlpatterns = [
     path('addSale/', views.addSale),
     path('addSaleItems/', views.addSaleItems),
     path('addProductStock/', views.addProductStock),
-    path('test/', views.getProductCost),
+    path('print/<int:id>/', views.printPDF),
 
 ]
