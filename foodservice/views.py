@@ -30,6 +30,21 @@ def addProduct(request):
             return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
     return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
 
+@csrf_exempt
+def editProduct(request):
+    if request.method == "POST":
+        body = json.loads(request.body)
+        print(body)
+        if body["type"] == 2:
+            prod = models.Product.objects.filter(company= body["company"], id=body["id"])
+            if prod[0].name != body["name"]:
+                prod.update(name=body["name"])
+            if prod[0].price != body["price"]:
+                prod.update(price=body["price"])    
+            return HttpResponse(status=200, headers={'content-type': 'application/json'})
+        return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
+    return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
+
 def getProduct(request):
     if request.method == "GET":
         try:
@@ -90,8 +105,40 @@ def addProductItems(request):
             cost += getProductCost(body["product_sale"], body["company"])
         models.Product.objects.filter(company=body["company"], id=body["product_sale"]).update(cost=cost)
         return HttpResponse(status=200, headers={'content-type': 'application/json'})
-        # return HttpResponse("Invalid form!", status=401, headers={'content-type': 'application/json'})
     return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
+
+@csrf_exempt
+def addProductItem(request):
+    if request.method == "POST":
+        body = json.loads(request.body)
+        form = forms.AddProductItemsForm(body)
+        print(form.is_valid())
+        if form.is_valid():
+            models.Product.objects.filter(company=body["company"], id=body["product_sale"]).update()
+        return HttpResponse(status=200, headers={'content-type': 'application/json'})
+    return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
+
+def getProductItems(request):
+    if request.method == "GET":
+        try:
+            get = dict(request.GET)
+        except MultiValueDictKeyError:
+            get = []
+            return HttpResponse("Invalid data!", status=401, headers={'content-type': 'application/json'})
+        if verifyLogin(get['token'][0]) == 200:
+            model = models.ProductItems.objects.filter(company=get['company'][0], product=get['product'][0])
+            data = []
+            for m in model:
+                data.append({
+                    'id': str(m.id),
+                    'name': str(m.product_item.name),
+                    'measure': str(m.product_item.measure),
+                    'quantity': str(m.quantity),
+                    'cost': str(round(m.product_item.cost,2)),
+                    'price': str(m.product_item.price),
+                })
+            return HttpResponse(json.dumps(data), status=200, headers={'content-type': 'application/json'})
+        return HttpResponse("Access Unautorized", status=402, headers={'content-type': 'application/json'})
 
 @csrf_exempt
 def addBrand(request):
@@ -193,10 +240,10 @@ def addProductStock(request):
             mod = m.cost*m.stock
             front = float(body["quantity"])*float(body["cost"])
             base = m.stock+float(body["quantity"])
-            if m.stock == 0:
-                model.update(stock=body["quantity"],cost=body["cost"])
+            if m.stock == 0 or base == 0:
+                model.update(stock=base,cost=body["cost"])
             else:
-                model.update(stock=round(m.stock+float(body["quantity"]),2),cost=(mod+front)/base) 
+                model.update(stock=round(base,2),cost=(mod+front)/base) 
         return HttpResponse(status=200, headers={'content-type': 'application/json'})
     return HttpResponse("Need be a POST", status=402, headers={'content-type': 'application/json'})
 
@@ -255,6 +302,3 @@ def printPDF(request, id):
 
 def mm2p(milimetros):
     return milimetros / 0.352777
-
-def createPdf():
-    return id
