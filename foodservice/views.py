@@ -273,7 +273,10 @@ def printPDF(request, id):
     line += -6
     for i in sale_items:
         total = total + i.price*i.quantity
-        cnv.drawString(mm2p(col),mm2p(line),str(int(i.quantity))+'x '+i.product.name)
+        if i.quantity == 0.5:
+            cnv.drawString(mm2p(col),mm2p(line),'½ '+i.product.name)
+        else:
+            cnv.drawString(mm2p(col),mm2p(line),str(int(i.quantity))+' '+i.product.name)
         cnv.drawString(mm2p(col+44),mm2p(line),str(i.price))
         cnv.drawString(mm2p(col+53),mm2p(line),str(i.price*i.quantity))
         line += -4
