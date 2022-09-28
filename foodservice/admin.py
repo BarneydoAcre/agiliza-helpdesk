@@ -18,7 +18,7 @@ class ProductBrandAdmin(admin.ModelAdmin):
 admin.site.register(models.ProductBrand, ProductBrandAdmin)
 
 class SaleAdmin(admin.ModelAdmin):
-    list_display = ("company", "value", "delivery",)
+    list_display = ("company", "id", "value", "delivery",)
 admin.site.register(models.Sale, SaleAdmin)
 
 class SaleItemsAdmin(admin.ModelAdmin):

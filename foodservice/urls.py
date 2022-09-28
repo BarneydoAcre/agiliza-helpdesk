@@ -1,5 +1,4 @@
 from django.urls import path, include
-
 from . import views
 
 app_name = 'foodservice'
@@ -19,5 +18,4 @@ urlpatterns = [
     path('addSaleItems/', views.addSaleItems),
     path('addProductStock/', views.addProductStock),
     path('print/<int:id>/', views.printPDF),
-
 ]
